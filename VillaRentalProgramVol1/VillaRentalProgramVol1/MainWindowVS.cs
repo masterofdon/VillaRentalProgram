@@ -15,82 +15,75 @@ namespace VillaRentalProgramVol1
 {
     class MainWindowVS : ViewStateMachine
     {
-        public enum MainWindowViewState { NULL, VIEW1STATE, VIEW2STATE, VIEW3STATE }
+        public enum MainWindoViewState { NULL, VIEW1STATE, VIEW2STATE, VIEW3STATE }
         public enum MainWindowButtonClickEvents { CON_TO_SITE_CLK, OPT_CLK, ABT_ME_CLK }
         public enum MouseClickEvents { RGHT_CLK, LEFT_CLK }
 
         public int initiatedViews = 0;
 
         private MainWindoViewState currentState;
+        private MainWindoViewState previousState;
         private MainWindoViewState nextState;
 
         public delegate void MainWindowButtonEventHandler(object sender, MainWindowEventArgs e);
         public event MainWindowButtonEventHandler MainWindowButtonClick;
-		
-		private MainWindowButtonClickEvents newEvent;
 
         public MainWindowVS()
         {
+            previousState = MainWindoViewState.NULL;
             currentState = MainWindoViewState.NULL;
             nextState = MainWindoViewState.NULL;
             
         }
-        protected virtual void OnMainwindowStateChanging(MainWindowEventArgs e)
+        protected virtual void OnMainwindowStateChanged(MainWindowEventArgs e)
         {
             MainWindowButtonEventHandler handler = MainWindowButtonClick;
             if(handler != null)
             {
                 handler(this,e);
-				this.currentState = this.nextState;
-				this.nextState = null;
             }
         }
         public MainWindoViewState GetCurrentState()
         {
             return currentState;
         }
+        public MainWindoViewState GetPreviousState()
+        {
+            return previousState;
+        }
         public MainWindoViewState GetNextState()
         {
             return nextState;
         }
-		public void SetNewEvent(MainWindowButtonClickEvents e)
-		{
-			this.newEvent = e;
-		}
-		public MainWindowButtonClickEvents SetNewEvent()
-		{
-			return this.newEvent;
-		}
-		public void CGAButtonClicked()
-		{
-			switch(currentState)
-			{
-					case MainWindoViewState.VIEW1STATE :
-						if(this.newEvent == MainWindowButtonClickEvents.CON_TO_SITE_CLK)
-						{
-							this.nextState = MainWindoViewState.VIEW1STATE;
-						}
-						else if(this.newEvent == MainWindowButtonClickEvents.OPT_CLK)
-						{
-							this.nextState = MainWindoViewState.VIEW2STATE;							
-						}
-						else if(this.newEvent == MainWindowButtonClickEvents.ABT_ME_CLK)
-						{
-							this.nextState = MainWindoViewState.VIEW3STATE;
-						}
-						else
-						{
-							//next state is null
-							
-						}						
-						if(this.nextState != this.currentState)
-						{
-							MainWindowEventArgs args = new MainWindowEventArgs(this.nextState, currentState);
-							OnMainwindowStateChanged(args);
-						}						
-					case MainWindoViewState.VIEW2STATE :
-			}
-		}
+        public void ConToSiteClicked()
+        {
+            if (currentState != MainWindoViewState.VIEW1STATE)
+            {
+                MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW1STATE,currentState,previousState);
+                
+                //MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW1STATE, currentState);
+                //currentState = MainWindoViewState.VIEW1STATE;
+                OnMainwindowStateChanged(args);
+            }
+        }
+        public void OptionsClicked()
+        {
+            if (currentState != MainWindoViewState.VIEW2STATE)
+            {
+                MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW2STATE, currentState, previousState);
+                //currentState = MainWindoViewState.VIEW2STATE;
+                OnMainwindowStateChanged(args);
+            }
+        }
+        public void AboutMeClicked()
+        {
+            if (currentState != MainWindoViewState.VIEW3STATE)
+            {
+                MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW3STATE, currentState, previousState);
+                //currentState = MainWindoViewState.VIEW3STATE;
+                OnMainwindowStateChanged(args);
+            }
+        }
         
         
     }
