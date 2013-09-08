@@ -8,23 +8,72 @@ namespace VillaRentalProgramVol1
 {
     static class TraceClass
     {
-        private static ServiceTraceWindow a = new ServiceTraceWindow();
-        public static void AddNewLog(string d)
+        public delegate void LogEventHandler(LogEventArgs e);
+        public delegate void SubLogEventHandler(LogEventArgs e);
+        public delegate void ErrorLogEventHandler(LogEventArgs e);
+        public static event LogEventHandler LogAddedEvent;
+        public static event SubLogEventHandler SubLogAddedEvent;
+        public static event ErrorLogEventHandler ErrorLogAddedEvent;
+
+        private static void OnNewLogAdded(string x)
         {
-            a.AddNewLog(d);
+            LogEventHandler handler = LogAddedEvent;
+            LogEventArgs e = new LogEventArgs(x, DateTime.Now.ToString());
+            if (handler != null)
+            {
+                handler(e);
+            }
         }
-        public static void AddNewLog(string m, string called_location)
+        private static void OnNewLogAdded(string t,string c)
         {
-            a.AddNewLog(m, called_location);
+            LogEventHandler handler = LogAddedEvent;
+            LogEventArgs e = new LogEventArgs(t,c, DateTime.Now.ToString());
+            if (handler != null)
+            {
+                handler(e);
+            }
         }
-        public static void AddSubLog(string m)
+        private static void OnNewSubLogAdded(string t, string c)
         {
-            a.AddSubLog(m);
+            SubLogEventHandler handler = SubLogAddedEvent;
+            LogEventArgs e = new LogEventArgs(t, c, DateTime.Now.ToString());
+            if (handler != null)
+            {
+                handler(e);
+            }
         }
-        public static void StartTracing(Form f)
+        private static void OnNewErrorLogAdded(string t, string c)
         {
-            a.StartTracing(f);
-            //f.Validating += new CancelEventHandler(StartLogDialog);
+            ErrorLogEventHandler handler = ErrorLogAddedEvent;
+            LogEventArgs e = new LogEventArgs(t, c, DateTime.Now.ToString());
+            if (handler != null)
+            {
+                handler(e);
+            }
+        }
+        public static void AddNewLog(string text)
+        {
+            OnNewLogAdded(text);
+        }
+        public static void AddNewLog(string text,string callerFunction)
+        {
+            OnNewLogAdded(text,callerFunction);
+        }
+        public static void AddNewSubLog(string text)
+        {
+            OnNewLogAdded(text);
+        }
+        public static void AddNewSubLog(string text, string callerFunction)
+        {
+            OnNewLogAdded(text, callerFunction);
+        }
+        public static void AddNewErrorLog(string text)
+        {
+            OnNewLogAdded(text);
+        }
+        public static void AddNewErrorLog(string text, string callerFunction)
+        {
+            OnNewLogAdded(text, callerFunction);
         }
     }
 }

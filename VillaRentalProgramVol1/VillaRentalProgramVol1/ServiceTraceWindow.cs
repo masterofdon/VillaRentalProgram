@@ -15,38 +15,28 @@ namespace VillaRentalProgramVol1
         {
             InitializeComponent();
             resolutionAndLocation();
+
+
+            TraceClass.LogAddedEvent += new TraceClass.LogEventHandler(LogAdded);
             this.Show();
         }
         private void resolutionAndLocation()
         {
 
         }
-        public void AddNewLog(string m)
+        private void LogAdded(LogEventArgs e)/*event handler for LogAddedEvent*/
         {
-            service_trace_logs.AppendText(">" + m + "\n");
+            service_trace_logs.AppendText(">" + e.getLogText() + "\n");
         }
-        public void AddNewLog(string m,string called_location)
+        private void SubLogAdded(LogEventArgs e)/*event handler for SubLogAddedEvent*/
         {
-            service_trace_logs.AppendText(">["+called_location.ToUpper()+"] : " + m + "\n");
-        }
-        public void AddSubLog(string m)
-        {
-            service_trace_logs.AppendText("\t" + m + "\n");
-        }
-        private void ShowLocationOnClick(object sender, EventArgs e)
-        {
-            AddNewLog("Mouse Position => X : " + MousePosition.X.ToString() + ", Y: " + MousePosition.Y.ToString());
-        }
-        private void StartLogDialog(object sender, EventArgs e)
-        {
-            AddNewLog("Action Logging Started", "startLogDialog");
+            service_trace_logs.AppendText(">" + e.getLogText() + "\n");
         }
         public void StartTracing(Form f)
         {
-            f.Shown += new EventHandler(StartLogDialog);
-            f.Click += new EventHandler(ShowLocationOnClick);
-            //f.Validating += new CancelEventHandler(StartLogDialog);
+
         }
+        
         
     }
 }

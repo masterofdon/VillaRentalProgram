@@ -11,7 +11,7 @@ namespace VillaRentalProgramVol1
 {
     public partial class MainWindow : Form
     {
-        ServiceTraceWindow TraceClass = new ServiceTraceWindow();       //tracing activity
+        ServiceTraceWindow TC = new ServiceTraceWindow();       //tracing activity
         List<Control> sitesManagementControls;                          //CG-B
         List<Control> MainPanels = new List<Control>();                 //a collection of CGs.
 
@@ -40,7 +40,7 @@ namespace VillaRentalProgramVol1
         {
             InitializeComponent();
             BasicResolutionIntegrity();
-            TraceClass.StartTracing(this);
+            TC.StartTracing(this);
             
             //Initiate SitesManagementControl section
             sitesManagementControls = new List<Control>();
@@ -100,8 +100,7 @@ namespace VillaRentalProgramVol1
             if (visualDebuggingModeLevel1On) leftButtonGroupPanel.BackColor = ColorTranslator.FromHtml("Lime");
             MainPanels.Add(leftButtonGroupPanel);
             if (traceOn) TraceClass.AddNewLog("CG-A Panel Options Added Successfully", "createCGAPanel");
-            if (traceOn) TraceClass.AddNewLog("Exiting", "createCGAPanel");
-            
+            if (traceOn) TraceClass.AddNewLog("Exiting", "createCGAPanel");            
         }
         private void createCGBPanel()
         {
@@ -305,7 +304,7 @@ namespace VillaRentalProgramVol1
             for (int i = 0; i < count; i++)
             {
                 collection[i].Visible = visibility;
-                if(traceOn) TraceClass.AddSubLog("setting [" + collection[i].Name + "] visibility to " + x);
+                if (traceOn) TraceClass.AddNewSubLog("setting [" + collection[i].Name + "] visibility to " + x);
             }
         }
         private void AddStandardCheckBox(string siteName, Control c, Control parent, int index)
