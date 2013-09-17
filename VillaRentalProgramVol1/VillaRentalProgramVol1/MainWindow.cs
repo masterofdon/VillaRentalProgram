@@ -11,7 +11,7 @@ namespace VillaRentalProgramVol1
 {
     public partial class MainWindow : Form
     {
-        ServiceTraceWindow TC = new ServiceTraceWindow();       //tracing activity
+        ServiceTraceWindow TC = new ServiceTraceWindow();               //tracing activity
         List<Control> sitesManagementControls;                          //CG-B
         List<Control> MainPanels = new List<Control>();                 //a collection of CGs.
 
@@ -28,13 +28,7 @@ namespace VillaRentalProgramVol1
         private bool View1Initiated = false;
         private bool CGCInitiated = true;
 
-        private bool traceOn = true;
-        private bool debuggingLevel1On = false;
-        private bool debuggingLevel2On = false;
-        private bool visualDebuggingModeLevel1On = false;
-        private bool visualDebuggingModeLevel2On = false;
-        private bool processingDebuggingModeLevel1On = false;
-        private bool processingDebuggingModeLevel2On = false;
+        
 
         public MainWindow()
         {
@@ -49,14 +43,14 @@ namespace VillaRentalProgramVol1
             /*-------------EVENTHANDLERS------------*/
             /*--------------------------------------*/
             //Load CGAButtonEvent
-            currentWindowVS.MainWindowButtonClick += new MainWindowVS.MainWindowButtonEventHandler(CGBViewChanged);
+            currentWindowVS.MainWindowStateChanged += new MainWindowVS.MainWindowStateEventHandler(CGBViewChanged);
             //Create Main Panels when this page is fully loaded
             this.Shown += new EventHandler(CreateMainPanels);
         }
         private void CGBViewChanged(object sender, MainWindowEventArgs e)
         {
             //View change has been initiated yet not set.
-            if (e.NextState == MainWindowVS.MainWindoViewState.VIEW1STATE)
+            if (e.NextState == MainWindowVS.MainWindowViewState.VIEW1STATE)
             {
                 if(!View1Initiated)   View1Initiate();
                 
@@ -92,42 +86,42 @@ namespace VillaRentalProgramVol1
         /*----------------------------------------------------------------*/
         private void createCGAPanel()
         {
-            if (traceOn) TraceClass.AddNewLog("Adding CG-A Panel Options", "createCGAPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding CG-A Panel Options", "createCGAPanel");
             Panel leftButtonGroupPanel = new Panel();
             leftButtonGroupPanel.Parent = this;
             leftButtonGroupPanel.Location = new Point(45, 50);
             leftButtonGroupPanel.Size = new Size(230, 230);
-            if (visualDebuggingModeLevel1On) leftButtonGroupPanel.BackColor = ColorTranslator.FromHtml("Lime");
+            if (TraceClassData.VIS_DBG_LVL1_ON) leftButtonGroupPanel.BackColor = ColorTranslator.FromHtml("Lime");
             MainPanels.Add(leftButtonGroupPanel);
-            if (traceOn) TraceClass.AddNewLog("CG-A Panel Options Added Successfully", "createCGAPanel");
-            if (traceOn) TraceClass.AddNewLog("Exiting", "createCGAPanel");            
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("CG-A Panel Options Added Successfully", "createCGAPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Exiting", "createCGAPanel");            
         }
         private void createCGBPanel()
         {
             /*This is the initial CG-B for the specific VIEW1.*/
             /*This function's name need to be changed*/
-            if (traceOn) TraceClass.AddNewLog("Adding CG-B Panel Options", "createCGBPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding CG-B Panel Options", "createCGBPanel");
             Panel CGBPanel = new Panel();
             CGBPanel.Parent = this;
             CGBPanel.Location = new Point(320, 50);
-            CGBPanel.Size = new Size(800, 550);
-            if (visualDebuggingModeLevel1On) CGBPanel.BackColor = ColorTranslator.FromHtml("Red");
+            CGBPanel.Size = new Size(800, 450);
+            if (TraceClassData.VIS_DBG_LVL1_ON) CGBPanel.BackColor = ColorTranslator.FromHtml("Red");
             MainPanels.Add(CGBPanel);
-            if (traceOn) TraceClass.AddNewLog("CG-B Panel Options Added Successfully", "createCGBPanel");
-            if (traceOn) TraceClass.AddNewLog("Exiting", "createCGBPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("CG-B Panel Options Added Successfully", "createCGBPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Exiting", "createCGBPanel");
         }
         private void createCGCPanel()
         {
-            if (traceOn) TraceClass.AddNewLog("Adding CG-C Panel Options", "createCGCPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding CG-C Panel Options", "createCGCPanel");
             Panel progressIndicatorGroupPanel = new Panel();
             progressIndicatorGroupPanel.Parent = this;
             int x = Convert.ToInt32(this.Height * 0.85f);
             progressIndicatorGroupPanel.Location = new Point(45, x - 35);
             progressIndicatorGroupPanel.Size = new Size(750, 80);
-            if (visualDebuggingModeLevel1On) progressIndicatorGroupPanel.BackColor = ColorTranslator.FromHtml("Lime");
+            if (TraceClassData.VIS_DBG_LVL1_ON) progressIndicatorGroupPanel.BackColor = ColorTranslator.FromHtml("Lime");
             MainPanels.Add(progressIndicatorGroupPanel);
-            if (traceOn) TraceClass.AddNewLog("CG-C Panel Options Added Successfully", "createCGCPanel");
-            if (traceOn) TraceClass.AddNewLog("Exiting", "createCGCPanel");            
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("CG-C Panel Options Added Successfully", "createCGCPanel");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Exiting", "createCGCPanel");            
         }
 
         private void View1Initiate()
@@ -135,6 +129,14 @@ namespace VillaRentalProgramVol1
             View1TopPanelInitiation();
             View1MidPanelInitiation();
             View1BottomPanelInitiation();
+        }
+        private void View2Initiate()
+        {
+
+        }
+        private void View3Initiate()
+        {
+
         }
         private void View1TopPanelInitiation()
         {
@@ -145,11 +147,11 @@ namespace VillaRentalProgramVol1
             ctsTopPanel.Parent = MainPanels[1];
             ctsTopPanel.Location = new Point(0,0);
             ctsTopPanel.Size = new Size(420, 20);
-            if (visualDebuggingModeLevel1On) ctsTopPanel.BackColor = ColorTranslator.FromHtml("Yellow");
+            if (TraceClassData.VIS_DBG_LVL1_ON) ctsTopPanel.BackColor = ColorTranslator.FromHtml("Yellow");
 
             /*This section adds select all checkbox and select all label*/
             /*Both controls are added to sitesManagementControls ControlCollection*/
-            if (traceOn) TraceClass.AddNewLog("Adding select all checkbox properties", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding select all checkbox properties", "CGBTopPanelInitiation");
             Control selectAllCheckBox = new CheckBox();         
             selectAllCheckBox.Location = new Point(10, 5);
             selectAllCheckBox.Size = new Size(15, 15);
@@ -157,10 +159,10 @@ namespace VillaRentalProgramVol1
             selectAllCheckBox.Click += new EventHandler(SelectAllClick);
             selectAllCheckBox.Parent = ctsTopPanel;  
             sitesManagementControls.Add(selectAllCheckBox);
-            if (traceOn) TraceClass.AddNewLog("Added select all checkbox properties", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added select all checkbox properties", "CGBTopPanelInitiation");
 
 
-            if (traceOn) TraceClass.AddNewLog("Adding select all label properties", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding select all label properties", "CGBTopPanelInitiation");
             Control selectAllLabel = new Label();
             selectAllLabel.Parent = ctsTopPanel;
             selectAllLabel.Text = "Select All";
@@ -170,7 +172,7 @@ namespace VillaRentalProgramVol1
             selectAllLabel.Location = new Point(40, 5);
             sitesManagementControls.Add(selectAllLabel);
             sitesManagementControlsInitiated = true;
-            if (traceOn) TraceClass.AddNewLog("Added select all label properties", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added select all label properties", "CGBTopPanelInitiation");
         }
         private void View1MidPanelInitiation()
         {
@@ -181,44 +183,62 @@ namespace VillaRentalProgramVol1
             rentalSitesListPanel.Location = new Point(0, 25);
             rentalSitesListPanel.Size = new Size(700, 300);
             rentalSitesListPanel.Name = "rentalSitesListPanel";
-            if (visualDebuggingModeLevel1On) rentalSitesListPanel.BackColor = ColorTranslator.FromHtml("Yellow");
+            if (TraceClassData.VIS_DBG_LVL1_ON) rentalSitesListPanel.BackColor = ColorTranslator.FromHtml("Yellow");
 
-            if (traceOn) TraceClass.AddNewLog("Adding villarenters.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding villarenters.com controls.", "CGBTopPanelInitiation");
             SMCAddSite(1, "villarenters.com", "anatolian", "aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added villarentes.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added villarentes.com controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding airbnb.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding airbnb.com controls.", "CGBTopPanelInitiation");
             SMCAddSite(2, "airbnb.com", "anatolian", "aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added airbnb.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added airbnb.com controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding housetrip.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding housetrip.com controls.", "CGBTopPanelInitiation");
             SMCAddSite(3, "housetrip.com", "anatolian", "aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added housetrip.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added housetrip.com controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding holidaylettings.co.uk controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding holidaylettings.co.uk controls.", "CGBTopPanelInitiation");
             SMCAddSite(4, "holidayletting.co.uk", "26210", "aksarayli");
-            if (traceOn) TraceClass.AddNewLog("Added holidayletting.co.uk controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added holidayletting.co.uk controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding ownersdirect.co.uk controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding ownersdirect.co.uk controls.", "CGBTopPanelInitiation");
             SMCAddSite(5, "ownersdirect.co.uk", "anatolian", "aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added ownersdirect.co.uk controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added ownersdirect.co.uk controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding flipkey.com controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding flipkey.com controls.", "CGBTopPanelInitiation");
             SMCAddSite(6, "flipkey.com", "anatolian752002@yahoo.com", "aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added flipkey.co.uk controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added flipkey.co.uk controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding e-domizil.de controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding e-domizil.de controls.", "CGBTopPanelInitiation");
             SMCAddSite(7, "e-domizil.de", "anatolian", "Aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added e-domizil.de controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added e-domizil.de controls.", "CGBTopPanelInitiation");
 
-            if (traceOn) TraceClass.AddNewLog("Adding holiday-villas.ru controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Adding holiday-villas.ru controls.", "CGBTopPanelInitiation");
             SMCAddSite(8, "holiday-villas.ru", "anatolian752002@yahoo.com", "aksaray68");
-            if (traceOn) TraceClass.AddNewLog("Added holiday-villas.ru controls.", "CGBTopPanelInitiation");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Added holiday-villas.ru controls.", "CGBTopPanelInitiation");
         }
         private void View1BottomPanelInitiation()
         {
             /*This panel is for the bottom control.Paging and connecion controls are on this panel*/
             /*FD Name: VIEW1_BOT*/
+            Panel bottomPanel = new Panel();
+            if (TraceClassData.VIS_DBG_LVL2_ON) bottomPanel.BackColor = ColorTranslator.FromHtml("red");
+            bottomPanel.Size = new Size(500, 80);
+            bottomPanel.Location = new Point(0, 300);
+            bottomPanel.Parent = MainPanels[1];
+
+            Button connect = new Button();
+            connect.Parent = bottomPanel;
+            connect.Size = new Size(150, 30);
+            connect.Location = new Point(10, 35);
+            connect.TextAlign = ContentAlignment.MiddleCenter;
+            connect.Text = "Connect Now";
+            connect.Font = new Font(new FontFamily("Microsoft Sans Serif"),9, FontStyle.Bold);
+            connect.BackColor = ColorTranslator.FromHtml("gray");
+            connect.Enabled = true;
+            connect.ForeColor = ColorTranslator.FromHtml("lime");
+            connect.Click += new EventHandler(ConnectNowClicked);
+            
         }        
         
         
@@ -264,21 +284,25 @@ namespace VillaRentalProgramVol1
         /*----------------------------------------------------------------*/
         private void btn_cts_Click(object sender, EventArgs e)
         {
-            if (traceOn) TraceClass.AddNewLog("Connect To Sites Clicked");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Connect To Sites Clicked");
             //raise the ConToSiteClick event
-            currentWindowVS.ConToSiteClicked();
+            currentWindowVS.CGAButtonClicked();
         }
         private void btn_user_options_Click(object sender, EventArgs e)
         {
-            if (traceOn) TraceClass.AddNewLog("Options Clicked");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Options Clicked");
             //raise the OptionsClick event
-            currentWindowVS.OptionsClicked();
+            currentWindowVS.CGAButtonClicked();
         }
         private void btn_about_me_Click(object sender, EventArgs e)
         {
-            if (traceOn) TraceClass.AddNewLog("About Me Clicked");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("About Me Clicked");
             //raise the AboutMeClick event
-            currentWindowVS.AboutMeClicked();
+            currentWindowVS.CGAButtonClicked();
+        }
+        private void ConnectNowClicked(object sender, EventArgs e)
+        {
+
         }
         private void SelectAllClick(object sender, EventArgs e)
         {
@@ -300,11 +324,11 @@ namespace VillaRentalProgramVol1
             /*All controls inside the list will be set the visibility bool value*/
             string x = (visibility ? "visible" : "invisible");
             int count = collection.Count;
-            if (traceOn) TraceClass.AddNewLog("Setting controls visibility of " + count.ToString() + " controls to " + x, "setallcontrolsvisibility");
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Setting controls visibility of " + count.ToString() + " controls to " + x, "setallcontrolsvisibility");
             for (int i = 0; i < count; i++)
             {
                 collection[i].Visible = visibility;
-                if (traceOn) TraceClass.AddNewSubLog("setting [" + collection[i].Name + "] visibility to " + x);
+                if (TraceClassData.TRACE_ON) TraceClass.AddNewSubLog("setting [" + collection[i].Name + "] visibility to " + x);
             }
         }
         private void AddStandardCheckBox(string siteName, Control c, Control parent, int index)

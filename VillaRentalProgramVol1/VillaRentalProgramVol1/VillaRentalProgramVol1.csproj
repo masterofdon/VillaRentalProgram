@@ -71,6 +71,7 @@
       <DependentUpon>ServiceTraceWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="TraceClass.cs" />
+    <Compile Include="TraceClassData.cs" />
     <Compile Include="ViewStateMachine.cs" />
     <Compile Include="VillaDay.cs" />
     <EmbeddedResource Include="Form1.resx">

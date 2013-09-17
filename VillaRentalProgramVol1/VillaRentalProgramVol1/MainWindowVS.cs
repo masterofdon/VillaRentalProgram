@@ -15,75 +15,161 @@ namespace VillaRentalProgramVol1
 {
     class MainWindowVS : ViewStateMachine
     {
-        public enum MainWindoViewState { NULL, VIEW1STATE, VIEW2STATE, VIEW3STATE }
+        public enum MainWindowViewState { NULL, VIEW1STATE, VIEW2STATE, VIEW3STATE }
         public enum MainWindowButtonClickEvents { CON_TO_SITE_CLK, OPT_CLK, ABT_ME_CLK }
         public enum MouseClickEvents { RGHT_CLK, LEFT_CLK }
 
         public int initiatedViews = 0;
 
-        private MainWindoViewState currentState;
-        private MainWindoViewState previousState;
-        private MainWindoViewState nextState;
+        private MainWindowViewState currentState;
+        private MainWindowViewState nextState;
 
         public delegate void MainWindowButtonEventHandler(object sender, MainWindowEventArgs e);
         public event MainWindowButtonEventHandler MainWindowButtonClick;
 
+        public delegate void MainWindowStateEventHandler(object sender, MainWindowEventArgs e);
+        public event MainWindowStateEventHandler MainWindowStateChanged;
+		
+        private MainWindowButtonClickEvents newEvent;
+
         public MainWindowVS()
         {
-            previousState = MainWindoViewState.NULL;
-            currentState = MainWindoViewState.NULL;
-            nextState = MainWindoViewState.NULL;
+            currentState = MainWindowViewState.NULL;
+            nextState = MainWindowViewState.NULL;
             
         }
-        protected virtual void OnMainwindowStateChanged(MainWindowEventArgs e)
+        protected virtual void OnMainwindowStateChanging(MainWindowEventArgs e)
         {
-            MainWindowButtonEventHandler handler = MainWindowButtonClick;
+            MainWindowStateEventHandler handler = MainWindowStateChanged;
             if(handler != null)
             {
                 handler(this,e);
+				this.currentState = this.nextState;
+                this.nextState = MainWindowViewState.NULL;
             }
         }
-        public MainWindoViewState GetCurrentState()
+        public MainWindowViewState GetCurrentState()
         {
             return currentState;
         }
-        public MainWindoViewState GetPreviousState()
-        {
-            return previousState;
-        }
-        public MainWindoViewState GetNextState()
+        public MainWindowViewState GetNextState()
         {
             return nextState;
         }
-        public void ConToSiteClicked()
-        {
-            if (currentState != MainWindoViewState.VIEW1STATE)
-            {
-                MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW1STATE,currentState,previousState);
-                
-                //MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW1STATE, currentState);
-                //currentState = MainWindoViewState.VIEW1STATE;
-                OnMainwindowStateChanged(args);
-            }
-        }
-        public void OptionsClicked()
-        {
-            if (currentState != MainWindoViewState.VIEW2STATE)
-            {
-                MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW2STATE, currentState, previousState);
-                //currentState = MainWindoViewState.VIEW2STATE;
-                OnMainwindowStateChanged(args);
-            }
-        }
-        public void AboutMeClicked()
-        {
-            if (currentState != MainWindoViewState.VIEW3STATE)
-            {
-                MainWindowEventArgs args = new MainWindowEventArgs(MainWindoViewState.VIEW3STATE, currentState, previousState);
-                //currentState = MainWindoViewState.VIEW3STATE;
-                OnMainwindowStateChanged(args);
-            }
-        }
+		public void SetNewEvent(MainWindowButtonClickEvents e)
+		{
+			this.newEvent = e;
+		}
+		public MainWindowButtonClickEvents SetNewEvent()
+		{
+			return this.newEvent;
+		}
+		public void CGAButtonClicked()
+		{
+			switch(currentState)
+			{
+                case MainWindowViewState.VIEW1STATE:
+					if(this.newEvent == MainWindowButtonClickEvents.CON_TO_SITE_CLK)
+					{
+                        this.nextState = MainWindowViewState.VIEW1STATE;
+					}
+					else if(this.newEvent == MainWindowButtonClickEvents.OPT_CLK)
+					{
+                        this.nextState = MainWindowViewState.VIEW2STATE;							
+					}
+					else if(this.newEvent == MainWindowButtonClickEvents.ABT_ME_CLK)
+					{
+                        this.nextState = MainWindowViewState.VIEW3STATE;
+					}
+					else
+					{
+						//next state is null
+                        //there must be something wrong in here...
+							
+					}						
+					if(this.nextState != this.currentState)
+					{
+						MainWindowEventArgs args = new MainWindowEventArgs(this.nextState, currentState);
+                        OnMainwindowStateChanging(args);
+					}
+                    break;
+                case MainWindowViewState.VIEW2STATE:
+                    if(this.newEvent == MainWindowButtonClickEvents.CON_TO_SITE_CLK)
+					{
+                        this.nextState = MainWindowViewState.VIEW1STATE;
+					}
+					else if(this.newEvent == MainWindowButtonClickEvents.OPT_CLK)
+					{
+                        this.nextState = MainWindowViewState.VIEW2STATE;							
+					}
+					else if(this.newEvent == MainWindowButtonClickEvents.ABT_ME_CLK)
+					{
+                        this.nextState = MainWindowViewState.VIEW3STATE;
+					}
+					else
+					{
+						//next state is null
+							
+					}						
+					if(this.nextState != this.currentState)
+					{
+						MainWindowEventArgs args = new MainWindowEventArgs(this.nextState, currentState);
+                        OnMainwindowStateChanging(args);
+					}
+                    break;
+                case MainWindowViewState.VIEW3STATE:
+                    if (this.newEvent == MainWindowButtonClickEvents.CON_TO_SITE_CLK)
+                    {
+                        this.nextState = MainWindowViewState.VIEW1STATE;
+                    }
+                    else if (this.newEvent == MainWindowButtonClickEvents.OPT_CLK)
+                    {
+                        this.nextState = MainWindowViewState.VIEW2STATE;
+                    }
+                    else if (this.newEvent == MainWindowButtonClickEvents.ABT_ME_CLK)
+                    {
+                        this.nextState = MainWindowViewState.VIEW3STATE;
+                    }
+                    else
+                    {
+                        //next state is null
+
+                    }
+                    if (this.nextState != this.currentState)
+                    {
+                        MainWindowEventArgs args = new MainWindowEventArgs(this.nextState, currentState);
+                        OnMainwindowStateChanging(args);
+                    }
+                    break;
+                case MainWindowViewState.NULL:
+                    if (this.newEvent == MainWindowButtonClickEvents.CON_TO_SITE_CLK)
+                    {
+                        this.nextState = MainWindowViewState.VIEW1STATE;
+                    }
+                    else if (this.newEvent == MainWindowButtonClickEvents.OPT_CLK)
+                    {
+                        this.nextState = MainWindowViewState.VIEW2STATE;
+                    }
+                    else if (this.newEvent == MainWindowButtonClickEvents.ABT_ME_CLK)
+                    {
+                        this.nextState = MainWindowViewState.VIEW3STATE;
+                    }
+                    else
+                    {
+                        //next state is null
+
+                    }
+                    if (this.nextState != this.currentState)
+                    {
+                        MainWindowEventArgs args = new MainWindowEventArgs(this.nextState, currentState);
+                        OnMainwindowStateChanging(args);
+                    }
+                    break;
+                default:
+                    break;
+			}//end of switch
+
+		}
         
         
     }

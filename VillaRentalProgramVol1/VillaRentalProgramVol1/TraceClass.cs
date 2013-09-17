@@ -15,6 +15,8 @@ namespace VillaRentalProgramVol1
         public static event SubLogEventHandler SubLogAddedEvent;
         public static event ErrorLogEventHandler ErrorLogAddedEvent;
 
+        
+
         private static void OnNewLogAdded(string x)
         {
             LogEventHandler handler = LogAddedEvent;
