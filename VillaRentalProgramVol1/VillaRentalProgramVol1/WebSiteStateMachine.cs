@@ -66,5 +66,9 @@ namespace VillaRentalProgramVol1
                     break;
             }
         }
+        public virtual SiteState GetNextState()
+        {
+            return nextSiteState;
+        }
     }
 }

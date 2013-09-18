@@ -16,27 +16,40 @@ namespace VillaRentalProgramVol1
             this.currentWebBrowser.Navigating += new WebBrowserNavigatingEventHandler(NavigatingHandler);
             this.currentWebBrowser.Navigated += new WebBrowserNavigatedEventHandler(NavigatedHandler);
         }        
-        public override void NavigateToMainPage()
+        private override void NavigateToMainPage()
         {
             this.currentWebBrowser.Navigate(VillarentersSD.MAIN_PAGE);            
         }
-        public override void NavigateToLoginPage()
-        {
+        private override void NavigateToLoginPage()
+        {            
             this.currentWebBrowser.Navigate(VillarentersSD.LOGIN_PAGE);
         }
-        public override void NavigateToPropertiesPage()
+        private override void NavigateToPropertiesPage()
         {
             this.currentWebBrowser.Navigate(VillarentersSD.PROPERTIES_PAGE);
         }
-        public override void NavigateToCalendarPage()
+        private override void NavigateToCalendarPage()
         {
             this.currentWebBrowser.Navigate(VillarentersSD.CALENDAR_PAGE);
         }
         void NavigatedHandler(object sender, WebBrowserNavigatedEventArgs e)
         {
+            stateMachine.NextStateDone();
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Setting current event to NULL", "NavigatedHandler");
+            switch (stateMachine.GetCurrentState())
+            {
+                case WebSiteStateMachine.SiteState.LOGIN_VIEW:
+                    LoginToSite();
+                    break;
+                default:
+                    break;
+            }
         }
         void NavigatingHandler(object sender, WebBrowserNavigatingEventArgs e)
         {
+            if (TraceClassData.TRACE_ON) TraceClass.AddNewLog("Setting current event to NAV_LOGIN", "NavigatingHandler");
+            stateMachine.SetCurrentEvent(WebSiteStateMachine.SiteEvent.NAV_LOGIN);
+            stateMachine.SetNextState();
         }
         public override void LoginToSite()
         {
@@ -49,11 +62,33 @@ namespace VillaRentalProgramVol1
     }
     public class VillarentersStateMachine : WebSiteStateMachine
     {
-        public override enum SiteState { NULL, LOGIN_VIEW, LOGGED_IN_VIEW, PROPERTIES_VIEW, CALENDAR_VIEW};
-        public override enum SiteEvent { NAV_LOGIN, LOGIN, NAV_PROP, NAV_CALENDAR };
+        public override enum SiteState 
+            {LOGIN_VIEW,
+            LOGIN_ATTEMPT,
+            LOGGED_VIEW,
+            PROP_ATTEMPT,
+            PROP_VIEW,
+            CAL_ATTEMPT,
+            CAL_VIEW,
+            LOAD_ERROR};
+        public override enum SiteEvent {
+            NAV_LOGIN,
+            LOGIN_SUC,
+            LOGIN_FAIL,
+            LOG_ERR,
+            PROP_CLICK,
+            PROP_SUC,
+            PROP_ERR,
+            CAL_CLICK,
+            CAL_SUC,
+            CAL_ERR};
         private SiteState currentSiteState;
         private SiteState nextSiteState;
         private SiteEvent currentEvent;
+
+        public delegate void StateEventHandler(object sender, VillarentersSMEventArgs e);
+        public event StateEventHandler SMEvent;
+
 
         public VillarentersStateMachine()
         {
@@ -107,6 +142,10 @@ namespace VillaRentalProgramVol1
                     nextSiteState = currentSiteState;
                     break;
             }
+        }
+        public override SiteState GetNextState()
+        {
+            return nextSiteState;
         }
     }
 }

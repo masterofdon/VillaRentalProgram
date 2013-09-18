@@ -74,6 +74,11 @@
     <Compile Include="TraceClassData.cs" />
     <Compile Include="ViewStateMachine.cs" />
     <Compile Include="VillaDay.cs" />
+    <Compile Include="VillarentersConnectionHandler.cs" />
+    <Compile Include="VillarentersSD.cs" />
+    <Compile Include="VillarentersSMEventArgs.cs" />
+    <Compile Include="WebSiteConnectionHandler.cs" />
+    <Compile Include="WebSiteStateMachine.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
